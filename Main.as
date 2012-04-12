@@ -150,7 +150,8 @@
 		
 		private function onResize(e:Event):void
 		{
-			var ratio:Number = stage.stageHeight / stage.stageWidth;
+			var ratio:Number = Math.min(stage.stageHeight / Main.HEIGHT, stage.stageWidth / Main.WIDTH);
+			trace(stage.stageHeight, stage.stageWidth, ratio);
 			this.scaleX = ratio;
 			this.scaleY = ratio;
 			this.x = (stage.stageWidth - Main.WIDTH * this.scaleX) / 2;
@@ -160,7 +161,7 @@
 		private function deactivate(e:Event):void 
 		{
 			// auto-close
-			NativeApplication.nativeApplication.exit();
+			//NativeApplication.nativeApplication.exit();
 		}
 		/**
 		 * Relance le niveau actuel.

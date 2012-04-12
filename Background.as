@@ -49,7 +49,6 @@
 			FondMiroir = mirror(FondNormal);
 			FondMiroir.x = Main.WIDTH;
 			addChild( FondMiroir );
-			FondMiroir
 		}
 		
 		public override function set x(v:Number):void
