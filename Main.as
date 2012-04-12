@@ -1,19 +1,26 @@
 ﻿package 
 {
+	import com.greensock.OverwriteManager;
 	import com.greensock.TweenLite;
+	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.filters.BevelFilter;
 	import flash.filters.DropShadowFilter;
+	import flash.geom.Rectangle;
 	import flash.net.sendToURL;
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	import flash.utils.getTimer;
 	import mochi.as3.MochiAd;
 	import Levels.*;
@@ -77,39 +84,21 @@
 		 */
 		private var Fond:Background = new Background();
 		
-		/**
-		 * Mdofications du menu contextuel
-		 */
-		private var menuItemRestart:ContextMenuItem = new ContextMenuItem("Recommencer le niveau");
-		private var menuItemPrevious:ContextMenuItem = new ContextMenuItem("Reculer d'un niveau");
-		private var menuItemNext:ContextMenuItem = new ContextMenuItem("Avancer d'un niveau");
-		
-		private var myMenu:ContextMenu = new ContextMenu();
-		
-		/**
-		 * Gestion de la pub.
-		 */
-		private var Pub:MovieClip = new MovieClip();
-		private var DernierePub:int = getTimer();//La première pub arrive au bout de 15 minutes de jeu (5 + 10=.
-		private const PUB_INTERVAL:int = 1000 * 60 * 10;//Puis toutes les dix minutes.
-		private var IsShowingAd:Boolean = false;//Empêche de passer les publicités.
-		
 		public function Main():void 
 		{
-			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
-		}
-		
-		/**
-		 * Initialiser l'application et construire la banque de données pour les niveaux.
-		 */
-		private function init(e:Event = null):void 
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			stage.addEventListener(Event.DEACTIVATE, deactivate);
+			stage.addEventListener(Event.RESIZE, onResize);
+			this.scrollRect = new Rectangle(0, 0, Main.WIDTH, Main.HEIGHT);
 			
-			addChild(Pub);
-			Pub.visible = false;
-			Pub.stageParent = this;
+			// touch or gesture?
+			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			
+			// entry point
+			OverwriteManager.init();
+			
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			//Enregistrer le nouveau joueur de façon asynchrone :
 			sendToURL(new URLRequest("http://neamar.fr/Res/Icosien/Player.php"));
@@ -159,6 +148,20 @@
 			stage.addEventListener(KeyboardEvent.KEY_UP, moveKeyboard);
 		}
 		
+		private function onResize(e:Event):void
+		{
+			var ratio:Number = stage.stageHeight / stage.stageWidth;
+			this.scaleX = ratio;
+			this.scaleY = ratio;
+			this.x = (stage.stageWidth - Main.WIDTH * this.scaleX) / 2;
+			this.y = (stage.stageHeight - Main.HEIGHT * this.scaleY) / 2;
+		}
+		
+		private function deactivate(e:Event):void 
+		{
+			// auto-close
+			NativeApplication.nativeApplication.exit();
+		}
 		/**
 		 * Relance le niveau actuel.
 		 * @param	e Un évenement non utilisé.
@@ -215,37 +218,21 @@
 					AncienNiveau.Toile.disconnect();
 			}
 			
-			//Changer le niveau, ou afficher une pub.
-			if (DernierePub + PUB_INTERVAL < getTimer())
-			{//Afficher une pub.
-				NiveauActuel = new AdLevel("", Pub);
-				(NiveauActuel as TextLevel).Caption = "Votre jeu va reprendre dans quelques secondes...";
-				DernierePub = getTimer() + 10000;
-				IsShowingAd = true;
-			}
-			else
-			{
-				IsShowingAd = false;
 				
-				//Passer au niveau suivant
-				NumeroNiveauActuel += Sens;
-				//Charger le niveau de la banque de données.
-				NiveauActuel = Datas[NumeroNiveauActuel - 1].build();
+			//Passer au niveau suivant
+			NumeroNiveauActuel += Sens;
+			//Charger le niveau de la banque de données.
+			NiveauActuel = Datas[NumeroNiveauActuel - 1].build();
+			
+			//Afficher la progression :
+			if (NiveauActuel is TextLevel && NumeroNiveauActuel!=1 && NumeroNiveauActuel!=Datas.length)
+				(NiveauActuel as TextLevel).Caption = (NumeroNiveauActuel-1) + " / " + (Datas.length-2);//-1 car la présentation ne compte pas, -2 car le début et la fin ne comptent pas.
 				
-				//Afficher la progression :
-				if (NiveauActuel is TextLevel && NumeroNiveauActuel!=1 && NumeroNiveauActuel!=Datas.length)
-					(NiveauActuel as TextLevel).Caption = (NumeroNiveauActuel-1) + " / " + (Datas.length-2);//-1 car la présentation ne compte pas, -2 car le début et la fin ne comptent pas.
-					
-				//Si on arrive à l'avant dernier niveau, donner l'ordre de précharger l'image finale :)
-				if (NumeroNiveauActuel == Datas.length - 1)
-					EndLevel.downloadDatas();
-			}
+			//Si on arrive à l'avant dernier niveau, donner l'ordre de précharger l'image finale :)
+			if (NumeroNiveauActuel == Datas.length - 1)
+				EndLevel.downloadDatas();
 			
 			addChild(NiveauActuel);
-			
-			//Modifier le menu contextuel et les suivants / précédents
-			menuItemPrevious.enabled = canGetPreviousLevel();
-			menuItemNext.enabled = canGetNextLevel();
 			
 			//(re-)Passer la plante au premier plan et la planche au dernier.
 			setChildIndex(Plante, numChildren - 1);
@@ -312,8 +299,8 @@
 			}
 		}
 		
-		private function canGetNextLevel():Boolean { return (NumeroNiveauActuel <= SharedObject.getLocal("Icosien").data.NumeroNiveauActuel && !IsShowingAd); }
-		private function canGetPreviousLevel():Boolean { return (NumeroNiveauActuel > 1 && !IsShowingAd); }
+		private function canGetNextLevel():Boolean { return (NumeroNiveauActuel <= SharedObject.getLocal("Icosien").data.NumeroNiveauActuel); }
+		private function canGetPreviousLevel():Boolean { return (NumeroNiveauActuel > 1); }
 	}
 }
 import Levels.Level;

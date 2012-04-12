@@ -16,12 +16,11 @@
 	public class TextLevel extends Level
 	{
 		private static var TextEffet:Array = new Array(new DropShadowFilter(1, 40, 0, 1, 1, 1, 1, 1, true));
-		[Embed(source = "../../assets/Laouib.ttf", fontFamily = "Laouib", fontWeight = "bold", mimeType="application/x-font-truetype")]
 		private static var EmbedFont:String;
 		
 		private static var Aide_format:TextFormat = new TextFormat();
 		{
-			Aide_format.font = "Laouib";
+			Aide_format.font = "Microsoft Yahei";
 			Aide_format.size = 18;
 			Aide_format.bold = true
 			Aide_format.color = 0xd2cdc3;
@@ -51,7 +50,7 @@
 			
 			//Texte d'aide.
 			if (Texte != "")
-			{
+			{				
 				Aide.x=60;
 				Aide.y = 65;
 				Aide.width = 500;
@@ -86,6 +85,10 @@
 		{
 			if (!contains(AideEffet))
 				throw new Error("Ce niveau n'a pas été initialisé pour afficher du texte.");
+				
+			//Récupérer le texte traduit :
+			Texte = Language._(Texte);
+			
 			Aide.htmlText = Texte;
 		}
 		
@@ -107,7 +110,7 @@
 		 */
 		protected function initTextField(T:TextField,Container:Sprite):void
 		{
-			T.embedFonts = true;
+			//T.embedFonts = true;
 			T.defaultTextFormat = Aide_format;
 			//T.autoSize = "left";
 			T.thickness=3;

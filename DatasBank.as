@@ -5,8 +5,7 @@
 Datas.push(new LevelDatas(
 	CreditsLevel,
 	"",
-	"Made by <a href=\"http://neamar.fr\">Neamar</a>, designed by <a href=\"http://licoti2.free.fr\">Licoti</a>",
-	"Sponsorisé par http://www.mini-jeu-gratuit.fr"));
+	"Made by <a href=\"http://neamar.fr\">Neamar</a>, designed by <a href=\"http://licoti2.free.fr\">Licoti</a>"));
 	
 /**
  * PREMIÈRE PARTIE DE JEU : EULER
@@ -15,7 +14,7 @@ Datas.push(new LevelDatas(
 	EulerPathLevel,
 	"530,310|440,355|540,355|590,380|440,405|540,405|530,450:0,2|2,1|1,4|4,5|5,6|6,3|3,0",
 	"Flèche tutoriel 1",
-	"<p>Reproduisez le motif gris d'un seul mouvement de souris, sans repasser deux fois sur le même trait (mais les croisements de fil sont autorisés).<br /> Double cliquez pour recommencer !</p><p></p>Ayez des mouvements amples de souris, imaginez que vous tirez un fil derrière vous : pas besoin de frôler les clous !</p><p></p><p>Pour commencer à jouer, entraînez-vous sur la flèche ci-dessous.<br />Cliquez sur un clou pour attacher votre corde et commencer.</p>"
+	"EULER_TUTO"
 ));
 	
 Datas.push(new LevelDatas(
@@ -59,7 +58,7 @@ Datas.push(new LevelDatas(
 	//"Brinkmann Graph http://mathworld.wolfram.com/BrinkmannGraph.html"));
 	
 Datas.push(new LevelDatas(
-	EulerPathLevel,
+	EndEulerPathLevel,
 	"473,111|355,43|220,67|132,172|132,308|220,413|355,437|473,369|520,240|412,163|341,122|260,136|207,199|207,281|260,344|341,358|412,317|440,240|366,201|330,181|290,188|264,219|264,261|290,292|330,299|366,279|380,240:0,1|1,2|2,3|3,4|4,5|5,6|6,7|7,8|8,0|0,10|0,19|1,11|1,20|2,12|2,21|3,13|3,22|4,14|4,23|5,15|5,24|6,16|6,25|7,17|7,26|8,9|8,18|17,10|10,12|12,14|14,16|16,9|9,11|11,13|13,15|15,17|18,23|23,19|19,24|24,20|20,25|25,21|21,26|26,22|22,18|10,19|11,20|12,21|13,22|14,23|15,24|16,25|17,26",
 	"Doyle Graph http://mathworld.wolfram.com/DoyleGraph.html"));
 	
@@ -102,7 +101,7 @@ Datas.push(new LevelDatas(
 	HamiltonLevel,
 	"550,340|530,360|450,365|600,380|450,415|600,400|530,420|550,440:0,3|3,2|2,4|2,1|1,6|6,4|4,5|5,7|7,0|3,5",
 	"Flèche Tutorial Hamilton",
-	"<p>Vous avez maintenant fini l'échauffement, passons à la partie intéressante !</p><p></p><p>Changement de règle : il faut passer une et une seule fois sur chaque clou, en utilisant uniquement les traits disponibles pour joindre deux clous (mais vous n'êtes pas obligés de passer sur tous les traits).</p><p>Contrainte supplémentaire : il faut commencer et finir sur le même point.</p>"));
+	"HAMILTON_TUTO"));
 	
 Datas.push(new LevelDatas(
 	HamiltonLevel,

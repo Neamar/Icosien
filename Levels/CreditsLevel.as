@@ -2,6 +2,7 @@
 {
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.navigateToURL;
@@ -22,15 +23,14 @@
 		[Embed(source = "../../assets/Licoti.png")]
 		private var Licoti:Class;
 		
-
-		
 		private var Image:Bitmap = new Logo();
 		private var ImageNeamar:Bitmap = new Neamar();
 		private var ImageLicoti:Bitmap = new Licoti();
+
 		
-		public function CreditsLevel(Datas:String,Texte:String)
+		public function CreditsLevel(Datas:String)
 		{
-			super(Datas,Texte);
+			super(Datas,"SPONSOR");
 
 			Image.x = (Main.WIDTH - Image.width) / 2;
 			ImageNeamar.x = (Main.WIDTH - ImageNeamar.width) / 2;
@@ -44,6 +44,7 @@
 			addChild(ImageNeamar);
 			addChild(ImageLicoti);
 			
+			//Afficher le texte en bas à droite.
 			Aide.x = Main.WIDTH - Aide.textWidth - 20;
 			Aide.y = Main.HEIGHT - Aide.textHeight;
 			
@@ -60,7 +61,7 @@
 			removeChild(Image)
 			removeChild(ImageNeamar);
 			removeChild(ImageLicoti);
-			
+
 			Image.bitmapData.dispose();
 			ImageNeamar.bitmapData.dispose();
 			ImageLicoti.bitmapData.dispose();
