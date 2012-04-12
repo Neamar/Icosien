@@ -5,12 +5,14 @@
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
+	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.filters.BevelFilter;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
@@ -19,6 +21,7 @@
 	import flash.net.URLRequest;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
+	import flash.ui.Keyboard;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.getTimer;
@@ -39,6 +42,13 @@
 		public static const WIDTH:int = 640;
 		public static const HEIGHT:int = 480;
 		public static const SLIDE_DUREE:Number = 2;
+		
+		[Embed(source = "../assets/left.png")]
+		private var leftClass:Class;
+		private var left:Sprite = new Sprite();
+		[Embed(source = "../assets/right.png")]
+		private var rightClass:Class;
+		private var right:Sprite = new Sprite();
 		
 		/**
 		 * L'ombre, c'est la même pour tout le monde.
@@ -129,6 +139,18 @@
 			
 			addChild(Fond);
 			addChild(Plante);
+			addChild(left);
+			addChild(right);
+			
+			left.addChild(new leftClass());
+			right.addChild(new rightClass());
+			left.y = Main.HEIGHT - 300;
+			right.y = Main.HEIGHT - 300;
+			right.x = Main.WIDTH;
+			left.x = -left.width;
+			left.addEventListener(MouseEvent.CLICK, getPreviousLevel );
+			right.addEventListener(MouseEvent.CLICK, getNextLevel );
+			
 			Plante.filters = Ombre;
 			getNextLevel();
 			
@@ -144,6 +166,35 @@
 					getPreviousLevel();
 				else if (e.keyCode == 27 || e.keyCode == 82 || e.keyCode == 75 || e.keyCode == 32)
 					getSameLevel();
+				//Menu affiche tirettes
+				else if (e.keyCode == Keyboard.MENU)
+				{
+					if (left.x > -left.width)
+					{
+						hideTirette(left);
+						hideTirette(right);
+					}
+					else
+					{
+						showTirette(left);
+						showTirette(right);
+					}
+					
+					if (!canGetNextLevel())
+						hideTirette(right);
+					if (!canGetPreviousLevel())
+						hideTirette(left);
+						
+					e.preventDefault();
+				}
+				//Back uniquement si menu affiché
+				else if (e.keyCode == Keyboard.BACK && left.x >= 0)
+				{
+					hideTirette(left);
+					hideTirette(right);
+					e.preventDefault();
+					e.stopImmediatePropagation();
+				}
 			}
 			stage.addEventListener(KeyboardEvent.KEY_UP, moveKeyboard);
 		}
@@ -151,7 +202,6 @@
 		private function onResize(e:Event):void
 		{
 			var ratio:Number = Math.min(stage.stageHeight / Main.HEIGHT, stage.stageWidth / Main.WIDTH);
-			trace(stage.stageHeight, stage.stageWidth, ratio);
 			this.scaleX = ratio;
 			this.scaleY = ratio;
 			this.x = (stage.stageWidth - Main.WIDTH * this.scaleX) / 2;
@@ -181,6 +231,12 @@
 		{
 			if((e!=null && e.type==Level.LEVEL_WIN) || canGetNextLevel())
 				moveLevel(1);
+			
+			if (right.x < Main.WIDTH)
+				showTirette(left);
+			if (!canGetNextLevel())
+				hideTirette(right);
+			
 		}
 		
 		/**
@@ -190,7 +246,12 @@
 		public function getPreviousLevel(e:Event = null):void
 		{
 			if(canGetPreviousLevel())
-				moveLevel(-1);
+				moveLevel( -1);
+			
+			if (left.x >= 0)
+				showTirette(right);
+			if (!canGetPreviousLevel())
+				hideTirette(left);
 		}
 		
 		/**
@@ -237,6 +298,8 @@
 			
 			//(re-)Passer la plante au premier plan et la planche au dernier.
 			setChildIndex(Plante, numChildren - 1);
+			setChildIndex(left, numChildren - 1);
+			setChildIndex(right, numChildren - 1);
 			setChildIndex(Fond, 0);
 			
 			//Faire défiler la planche à l'arrière d'un cran, et bouger les niveaux.
@@ -298,6 +361,22 @@
 			{
 				_NumeroNiveauActuel = value;
 			}
+		}
+		
+		private function showTirette(tirette:Sprite):void
+		{
+			if(tirette == left)
+				TweenLite.to(tirette, 1, { x:0 } );
+			else
+				TweenLite.to(tirette, 1, { x:Main.WIDTH - tirette.width } );
+		}
+		
+		private function hideTirette(tirette:Sprite):void
+		{
+			if(tirette == left)
+				TweenLite.to(tirette, 1, { x:-tirette.width } );
+			else
+				TweenLite.to(tirette, 1, { x:Main.WIDTH } );
 		}
 		
 		private function canGetNextLevel():Boolean { return (NumeroNiveauActuel <= SharedObject.getLocal("Icosien").data.NumeroNiveauActuel); }
