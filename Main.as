@@ -122,7 +122,6 @@
 			
 			
 			//Et récupérer le dernier niveau (s'il existe)
-			LocalValue.NumeroNiveauActuel = null;
 			if (LocalValue.NumeroNiveauActuel == null)
 			{
 				trace("(Re-)set");
