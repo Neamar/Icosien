@@ -23,7 +23,7 @@
 		/**
 		 * Liste des points disponibles
 		 */		
-		protected var Points:Vector.<Point> = new Vector.<Point>();
+		public var Points:Vector.<Point> = new Vector.<Point>();
 		
 		/**
 		 * La corde des points déjà accrochés par un hook.

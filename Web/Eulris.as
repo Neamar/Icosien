@@ -75,7 +75,7 @@
 		 */
 		public function addFirstHook(e:MouseEvent):void
 		{
-				
+
 			//Supprimer les listeners et réduire les noeuds.
 			for each(var P:Point in Points)
 			{
