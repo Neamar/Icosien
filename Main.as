@@ -2,7 +2,6 @@
 {
 	import com.greensock.OverwriteManager;
 	import com.greensock.TweenLite;
-	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.MovieClip;
 	import flash.display.SpreadMethod;
@@ -25,8 +24,9 @@
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.getTimer;
-	import mochi.as3.MochiAd;
 	import Levels.*;
+	import qnx.events.QNXApplicationEvent;
+	import qnx.system.QNXApplication;
 	
 	/**
 	 * Icosien : le jeu flash :)
@@ -154,6 +154,26 @@
 			Plante.filters = Ombre;
 			getNextLevel();
 			
+			function onSwipeDown(e:Event)
+			{
+				if (left.x > -left.width)
+				{
+					hideTirette(left);
+					hideTirette(right);
+				}
+				else
+				{
+					showTirette(left);
+					showTirette(right);
+				}
+					
+				if (!canGetNextLevel())
+					hideTirette(right);
+				if (!canGetPreviousLevel())
+					hideTirette(left);		
+			}
+			QNXApplication.qnxApplication.addEventListener(QNXApplicationEvent.SWIPE_DOWN, onSwipeDown);
+			
 			//Permettre la navigation au clavier.
 			function moveKeyboard(e:KeyboardEvent):void
 			{
@@ -166,33 +186,6 @@
 					getPreviousLevel();
 				else if (e.keyCode == 27 || e.keyCode == 82 || e.keyCode == 75 || e.keyCode == 32)
 					getSameLevel();
-				else if (e.keyCode == Keyboard.MENU)//Menu affiche tirettes
-				{
-					if (left.x > -left.width)
-					{
-						hideTirette(left);
-						hideTirette(right);
-					}
-					else
-					{
-						showTirette(left);
-						showTirette(right);
-					}
-					
-					if (!canGetNextLevel())
-						hideTirette(right);
-					if (!canGetPreviousLevel())
-						hideTirette(left);
-						
-					e.preventDefault();
-				}
-				else if (e.keyCode == Keyboard.BACK && left.x >= 0) //Back uniquement si menu affiché
-				{
-					hideTirette(left);
-					hideTirette(right);
-					e.preventDefault();
-					e.stopImmediatePropagation();
-				}
 			}
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, moveKeyboard);
 		}
