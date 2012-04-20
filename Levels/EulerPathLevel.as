@@ -2,7 +2,6 @@
 {
 	import com.greensock.TweenLite;
 	import flash.events.Event;
-	import Web.Eulris;
 	
 	/**
 	 * Un niveau que l'on gagne en créant un circuit eulérien sur le graphe, i.e en parcourant toutes les arêtes en une seule fois.
@@ -17,7 +16,7 @@
 		 */
 		public function EulerPathLevel(Datas:String,Aide:String="")
 		{
-			super(Datas, Aide);
+			super(Datas,Aide);
 		}
 		
 		/**
@@ -70,5 +69,4 @@
 			super.firstHookAdded(e);
 		}
 	}
-	
 }

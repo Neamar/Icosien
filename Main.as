@@ -122,7 +122,7 @@
 			
 			
 			//Et récupérer le dernier niveau (s'il existe)
-			
+			LocalValue.NumeroNiveauActuel = null;
 			if (LocalValue.NumeroNiveauActuel == null)
 			{
 				trace("(Re-)set");
@@ -229,7 +229,7 @@
 		{
 			if((e!=null && e.type==Level.LEVEL_WIN) || canGetNextLevel())
 				moveLevel(1);
-			
+
 			if (right.x < Main.WIDTH)
 				showTirette(left);
 			if (!canGetNextLevel())
@@ -286,7 +286,7 @@
 			
 			//Afficher la progression :
 			if (NiveauActuel is TextLevel && NumeroNiveauActuel!=1 && NumeroNiveauActuel!=Datas.length)
-				(NiveauActuel as TextLevel).Caption = (NumeroNiveauActuel-1) + " / " + (Datas.length-2);//-1 car la présentation ne compte pas, -2 car le début et la fin ne comptent pas.
+				(NiveauActuel as TextLevel).Caption = (NumeroNiveauActuel-1) + " / " + (Datas.length-2); //-1 car la présentation ne compte pas, -2 car le début et la fin ne comptent pas.
 			
 			addChild(NiveauActuel);
 			

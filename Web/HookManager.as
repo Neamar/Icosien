@@ -18,12 +18,12 @@
 		 * .Angle : l'angle d'arrivée
 		 * .Sens : +1 ou -1 selon le sens d'arrivée de l'angle.
 		 */
-		private var Hooks:Vector.<Hook> = new Vector.<Hook>();
+		public var Hooks:Vector.<Hook> = new Vector.<Hook>();
 		
 		/**
 		 * Liste des points disponibles
 		 */		
-		protected var Points:Vector.<Point> = new Vector.<Point>();
+		public var Points:Vector.<Point> = new Vector.<Point>();
 		
 		/**
 		 * La corde des points déjà accrochés par un hook.

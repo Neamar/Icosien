@@ -54,6 +54,8 @@
 			AideEffet.useHandCursor = true;
 			
 			TweenLite.to(Image, DUREE, { alpha:1, onComplete:switchToNeamar } );
+			
+			Toile.mouseEnabled = false;
 		}
 		
 		public override final function destroy(e:Event=null):void

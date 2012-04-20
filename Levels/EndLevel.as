@@ -13,21 +13,25 @@
 	 * Le niveau de présentation des crédits
 	 * @author Neamar
 	 */
-	public class EndLevel extends Level
+	public class EndLevel extends TextLevel
 	{
 		[Embed(source = "../../assets/Fin.jpg")]
 		private static var Fin:Class;
 		
 		private var Image:Bitmap = new Fin();
 		
-		public function EndLevel(Datas:String)
+		public function EndLevel(Datas:String,Aide:String="")
 		{	
 			//Écraser les Datas et les remplacer par le positionnement des clous.
 			Datas = "1000,1000|1001,1001|218,45|294,33|361,13|439,25|48,243|176,276|341,276|560,237:0,1";
-			super(Datas);
+			super(Datas,Aide);
 	
 			addChild(Image);
 			setChildIndex(Image, 0);
+			
+			this.Aide.y = 350;
+			
+			addEventListener(MouseEvent.CLICK, downloadFull);
 		}
 		
 		/**
@@ -47,11 +51,9 @@
 		protected override function initEulris(e:Event=null):void
 		{
 			super.initEulris(e);
-			if (Image != null)
-			{
-				addChild(Image);
-				setChildIndex(Image, 0);
-			}
+
+			addChild(Image);
+			setChildIndex(Image, 0);
 		}
 		
 		/**
@@ -59,6 +61,17 @@
 		 */
 		protected override final function checkVictory():void
 		{
+		}
+		
+		protected function downloadFull(e:Event):void
+		{
+			
+			var request:URLRequest = new URLRequest("https://play.google.com/store/apps/details?id=air.neamar.Icosien");
+			try {
+			  navigateToURL(request, '_blank'); //Dans une nouvelle fenêtre (probablement nouvel onglet en fait)
+			} catch (e:Error) {
+			  trace("Impossible de lancer la fenêtre :(");
+			}
 		}
 	}
 	
