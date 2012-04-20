@@ -10,7 +10,7 @@
 		private static const EN:Object =
 		{
 			HAMILTON_TUTO:"<p>Well done.<br></p><p>New rule: you have to pass once and only once over each nail, only passing over existing gray lines (although you don't necessarily have to go over each line).<br></p><p>Last but not least: you must end with the nail you started from.</p>",
-			EULER_TUTO:"<p><br><br>Tap a nail to start.<br />Then swipe your finger to redraw the gray shape without going twice over the same line.<br></p><p>Double tap to start over.</p>",
+			EULER_TUTO:"<p><br><br>Tap a nail to start.<br />Then swipe your finger to redraw the gray shape without going twice over the same line.<br></p><p>Double tap to start over.</p><br>The rope behaves like<br> a string around a<br> nail in real life.",
 			END_EULER:"To win a race, the swiftness of a dart...",
 			SPONSOR:"<a href=\"http://neamar.fr/Res/\">Neamar</a>",
 			END:"The lite version ends here. Click to download the full version, with 20+ levels of increasing difficulty."

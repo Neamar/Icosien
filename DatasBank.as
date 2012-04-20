@@ -4,7 +4,7 @@
 
 Datas.push(new LevelDatas(
 	CreditsLevel,
-	"30,130|590,130|590,430|30,430:0,1|1,2|2,3|3,0",
+	"30,130|610,130|610,430|30,430:0,1|1,2|2,3|3,0",
 	"Made by <a href=\"http://neamar.fr\">Neamar</a>, designed by <a href=\"http://licoti2.free.fr\">Licoti</a>"));
 	
 /**
