@@ -5,6 +5,7 @@
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.net.navigateToURL;
 	import flash.net.URLRequest;
 	
@@ -27,6 +28,18 @@
 		private var ImageNeamar:Bitmap = new Neamar();
 		private var ImageLicoti:Bitmap = new Licoti();
 
+		private var currentPoint:pt;
+		private var points:Vector.<pt> = Vector.<pt>([
+			new pt(30, 130),
+			new pt(640, 70),
+			new pt(580, 300),
+			new pt(630, 470),
+			new pt(20, 460),
+			new pt(10, 10),
+			new pt(150, 10),
+			new pt(30, 130)
+		]);
+		private var timeBeforeChange:int = 0;
 		
 		public function CreditsLevel(Datas:String)
 		{
@@ -54,11 +67,17 @@
 			AideEffet.useHandCursor = true;
 			
 			TweenLite.to(Image, DUREE, { alpha:1, onComplete:switchToNeamar } );
+			
+			Toile.mouseEnabled = false;
+			Toile.Points[0].dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+			
+			addEventListener(Event.ENTER_FRAME, moveDemo);
 		}
 		
 		public override final function destroy(e:Event=null):void
 		{
-			removeChild(Image)
+			if(contains(Image))
+				removeChild(Image);
 			removeChild(ImageNeamar);
 			removeChild(ImageLicoti);
 
@@ -66,15 +85,44 @@
 			ImageNeamar.bitmapData.dispose();
 			ImageLicoti.bitmapData.dispose();
 			Image = ImageLicoti = ImageNeamar = null;
+			
+			removeEventListener(Event.ENTER_FRAME, moveDemo);
 		}
+		
+		public function moveDemo(e:Event):void
+		{
+			timeBeforeChange--;
+			
+			if (timeBeforeChange < 0)
+			{
+				currentPoint = points.shift();
+				timeBeforeChange = 30;
+				
+				if (points.length == 0)
+				{
+					removeEventListener(Event.ENTER_FRAME, moveDemo);
+					return;
+				}
+			}
+			
+			var offset:Number = timeBeforeChange / 30;
+			var currentMouse:flash.geom.Point = pt.interpolate(currentPoint, points[0], offset);
+			Toile.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_MOVE, true, false, currentMouse.x, currentMouse.y));
+		}
+		
+		protected final override function checkVictory():void
+		{ 	}
 		
 		/**
 		 * Efface Icosien, passe sur Neamar.
 		 */
 		public function switchToNeamar():void
 		{
-			TweenLite.to(Image,DUREE,{alpha:0})
-			TweenLite.to(ImageNeamar, DUREE, { alpha:1, onComplete:switchToLicoti } );
+			if (Image != null)
+			{
+				TweenLite.to(Image,DUREE,{alpha:0})
+				TweenLite.to(ImageNeamar, DUREE, { alpha:1, onComplete:switchToLicoti } );
+			}
 		}
 		
 		/**
@@ -82,9 +130,12 @@
 		 */
 		public function switchToLicoti():void
 		{
-			removeChild(Image);
-			TweenLite.to(ImageNeamar, DUREE, { alpha:0 } );
-			TweenLite.to(ImageLicoti, DUREE, { alpha:1, onComplete:makeVictory } );
+			if (Image != null)
+			{
+				removeChild(Image);
+				TweenLite.to(ImageNeamar, DUREE, { alpha:0 } );
+				TweenLite.to(ImageLicoti, DUREE, { alpha:1, onComplete:makeVictory } );
+			}
 		}
 		
 		public function makeVictory():void
@@ -102,5 +153,16 @@
 			}
 		}
 	}
-	
+}
+
+class pt extends flash.geom.Point
+{
+	public static function interpolate(p:pt, p2:pt, f:Number):flash.geom.Point
+	{
+		return flash.geom.Point.interpolate(p, p2, f);
+	}
+	public function pt(x:int, y:int)
+	{
+		super(x, y);
+	}
 }
