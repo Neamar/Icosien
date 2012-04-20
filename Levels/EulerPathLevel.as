@@ -1,6 +1,8 @@
 ﻿package Levels
 {
+	import com.greensock.TweenLite;
 	import flash.events.Event;
+	import Web.Eulris;
 	
 	/**
 	 * Un niveau que l'on gagne en créant un circuit eulérien sur le graphe, i.e en parcourant toutes les arêtes en une seule fois.
@@ -15,7 +17,7 @@
 		 */
 		public function EulerPathLevel(Datas:String,Aide:String="")
 		{
-			super(Datas,Aide);
+			super(Datas, Aide);
 		}
 		
 		/**
@@ -52,7 +54,20 @@
 			}
 
 			dispatchEvent(new Event(LEVEL_WIN));
+		}
+		
+		/**
+		 * Redessine le premier noeud selectionné pour l'identifier facilement
+		 * @param	e
+		 */
+		protected override function firstHookAdded(e:CustomEvent):void
+		{
+			var p:Point = (e.newHook.P as Point);
+			p.scaleX = p.scaleY = 2.5;
 			
+			TweenLite.to(p, 1.5, { scaleX:1, scaleY:1 } );
+			
+			super.firstHookAdded(e);
 		}
 	}
 	

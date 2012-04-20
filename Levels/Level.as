@@ -245,7 +245,7 @@
 		 * Déclenché une fois le noeud initial sélectionné.
 		 * @param	e
 		 */
-		private function firstHookAdded(e:Event):void
+		protected function firstHookAdded(e:CustomEvent):void
 		{
 			Toile.removeEventListener(Eulris.FIRST_HOOK_ADDED, firstHookAdded);
 			Toile.addEventListener(Eulris.HOOK_ADDED, hookAdded);

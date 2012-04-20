@@ -17,23 +17,15 @@
 	{
 		[Embed(source = "../../assets/Fin.jpg")]
 		private static var Fin:Class;
-		private static var Img_Fond:Loader;
 		
-		private var Image:Loader = Img_Fond;
+		private var Image:Bitmap = new Fin();
 		
 		public function EndLevel(Datas:String)
 		{	
 			//Écraser les Datas et les remplacer par le positionnement des clous.
 			Datas = "1000,1000|1001,1001|218,45|294,33|361,13|439,25|48,243|176,276|341,276|560,237:0,1";
 			super(Datas);
-
-			
-			if (Image == null)
-			{//On arrive probablement directement sur ce niveau, et le fichier n'a pas été chargé. Faire ça en urgence !
-				downloadDatas();
-				Image = Img_Fond;
-			}
-			
+	
 			addChild(Image);
 			setChildIndex(Image, 0);
 		}
@@ -63,23 +55,11 @@
 		}
 		
 		/**
-		 * Si le mec s'amuse à joueur, s'assurer qu'il ne peut pas gagner :)
+		 * Si le mec s'amuse à jouer, s'assurer qu'il ne peut pas gagner :)
 		 */
 		protected override final function checkVictory():void
 		{
 		}
-		
-		/**
-		 * L'image finale est relativement lourde, et rarement vue (malheureusement).
-		 * Plutôt que de l'inclure dans le swf, elle est donc téléchargée dynamiquement si la progression de l'utilisateur laisse croire qu'il va s'en sortir (bref, qu'il arrive sur l'avant dernier niveau :))
-		 */
-		public static function downloadDatas():void
-		{
-			Img_Fond = new Loader()
-			Img_Fond.load(new URLRequest("http://neamar.fr/Res/Icosien/Images/assets/Fin.jpg"),new LoaderContext(true));
-		}
-		
-		
 	}
 	
 }

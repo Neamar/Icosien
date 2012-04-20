@@ -166,8 +166,7 @@
 					getPreviousLevel();
 				else if (e.keyCode == 27 || e.keyCode == 82 || e.keyCode == 75 || e.keyCode == 32)
 					getSameLevel();
-				//Menu affiche tirettes
-				else if (e.keyCode == Keyboard.MENU)
+				else if (e.keyCode == Keyboard.MENU)//Menu affiche tirettes
 				{
 					if (left.x > -left.width)
 					{
@@ -187,8 +186,7 @@
 						
 					e.preventDefault();
 				}
-				//Back uniquement si menu affiché
-				else if (e.keyCode == Keyboard.BACK && left.x >= 0)
+				else if (e.keyCode == Keyboard.BACK && left.x >= 0) //Back uniquement si menu affiché
 				{
 					hideTirette(left);
 					hideTirette(right);
@@ -196,7 +194,7 @@
 					e.stopImmediatePropagation();
 				}
 			}
-			stage.addEventListener(KeyboardEvent.KEY_UP, moveKeyboard);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, moveKeyboard);
 		}
 		
 		private function onResize(e:Event):void
@@ -289,10 +287,6 @@
 			//Afficher la progression :
 			if (NiveauActuel is TextLevel && NumeroNiveauActuel!=1 && NumeroNiveauActuel!=Datas.length)
 				(NiveauActuel as TextLevel).Caption = (NumeroNiveauActuel-1) + " / " + (Datas.length-2);//-1 car la présentation ne compte pas, -2 car le début et la fin ne comptent pas.
-				
-			//Si on arrive à l'avant dernier niveau, donner l'ordre de précharger l'image finale :)
-			if (NumeroNiveauActuel == Datas.length - 1)
-				EndLevel.downloadDatas();
 			
 			addChild(NiveauActuel);
 			
